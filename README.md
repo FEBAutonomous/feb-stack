@@ -6,11 +6,16 @@ under `drivers/`. The car builds this whole repo and launches a driver by name.
 ```
 drivers/
   pranav/
-    pranav_driver/      a ROS 2 package with a driver.yaml
-    feb_mission/        the packages its launch file needs, listed in driver.yaml under packages:
+    pranav_driver/      a ROS 2 package with a driver.yaml; packages: lists the ones that are yours
   akhil/
     ...
+shared/
+  feb_mission/          the supervisor's state as go/stop hooks
+  feb_cone_ordering/    the team's cone ordering service
 ```
+
+`shared/` is one copy of the packages every driver may use, kept by the lead; a driver's
+`packages:` lists only its own, and `feb submit` refuses a name that is already in `shared/`.
 
 Nobody edits this repo by hand. `feb submit` in `feb-racing` copies a driver's packages here on
 your own branch and opens a pull request; the lead merges it. On the Jetson, `git pull` then

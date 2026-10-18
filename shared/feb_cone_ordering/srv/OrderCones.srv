@@ -1,0 +1,7 @@
+# Order the cones of a map into left/right rungs along the track (the team's cone ordering).
+geometry_msgs/Pose car          # where the car is and which way it faces (yaw in the quaternion)
+geometry_msgs/PoseArray map     # cones: position, colour in orientation.w (1 blue, 2 yellow; others ignored)
+---
+bool closed                     # the car sits inside a closed loop of cones
+geometry_msgs/PoseArray blue    # one rung per index: blue[i] is across the track from yellow[i]
+geometry_msgs/PoseArray yellow
