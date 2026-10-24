@@ -1,0 +1,13 @@
+# What this driver is and how feb up starts it: ./feb up --driver feb_driver [--mode-name inspection]
+name: feb_driver
+kind: walls                 # walls | cones | any: the kind of track it drives
+maintainer: FEB autonomous team
+packages: [feb_driver]     # what feb submit copies to the team repo: your own packages (feb_mission is shared, already there)
+modes:
+  trackdrive:               # the race: the driver's own speed limits, the supervisor cap above them
+    launch: drive.launch.py
+    max_speed: 3.0
+  inspection:               # a slow first lap, the car's first drive, a corridor at home
+    launch: drive.launch.py
+    max_speed: 0.8
+default_mode: trackdrive
