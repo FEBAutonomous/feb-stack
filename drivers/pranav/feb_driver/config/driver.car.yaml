@@ -1,0 +1,10 @@
+# Loaded on top of driver.yaml only on the car (FEB_CAR=1). Put here the numbers that differ on
+# the real car and nothing else, so the simulator run and the car run share every other value.
+# Same shape as driver.yaml. Empty until the first drive tells you what to change; the usual
+# suspects are below, commented out with the simulator values.
+reactive_driver:
+  ros__parameters:
+    max_speed: 1.5        # the real car's first laps; the supervisor's cap still applies on top
+    # bubble: 0.50        # the S2 sits higher and sees the ducts differently; widen if it clips
+    # steer_tau: 0.20     # the real servo is slower than the simulator's actuator
+    # brake_margin: 0.55  # the real car brakes less hard than throttle 0 in the simulator

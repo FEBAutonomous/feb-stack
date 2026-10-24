@@ -1,0 +1,12 @@
+name: feb_cone_driver
+kind: cones
+maintainer: FEB autonomous team
+packages: [feb_cone_driver]     # what feb submit copies to the team repo: your own packages (feb_mission is shared, already there)
+modes:
+  trackdrive:
+    launch: drive.launch.py
+    max_speed: 1.5
+  inspection:
+    launch: drive.launch.py
+    max_speed: 0.6
+default_mode: trackdrive

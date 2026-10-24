@@ -1,0 +1,8 @@
+# Loaded on top of driver.yaml only on the car (FEB_CAR=1): a memory racer on a real floor starts slow.
+racer:
+  ros__parameters:
+    warmup_speed: 1.2
+    recover_speed: 1.0
+    v_max: 2.5
+    speed_scale: 0.8
+    range_max: 12.0       # the S2 sees further than the simulator's lidar; the map does not need more
