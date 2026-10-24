@@ -1,0 +1,7 @@
+# Loaded on top of cone_driver.yaml only on the car (FEB_CAR=1). Put here the numbers that differ on
+# the real car and nothing else, so the simulator run and the car run share every other value.
+# Same shape as cone_driver.yaml. Empty until the first drive tells you what to change; the usual
+# suspects are below, commented out with the simulator values.
+cone_driver:
+  ros__parameters:
+    max_speed: 1.0        # the real car's first laps; the supervisor's cap still applies on top

@@ -1,0 +1,36 @@
+# Tune these. Every value has a comment in cone_driver.py.
+cone_driver:
+  ros__parameters:
+    max_speed: 1.7        # m/s on a straight (10 laps of loop_cones fit the 300 s attempt; clean at this speed)
+    min_speed: 1.0        # m/s floor, and the crawl with nothing to follow
+    lookahead: 1.0        # m, pure-pursuit target distance along the centreline
+    track_width: 2.2      # m, used when only one side of cones is visible
+    max_range: 6.0        # m, cones beyond this are ignored
+    cluster_gap: 0.15     # m, a jump between neighbouring returns splits a cluster
+    cone_max_width: 0.35  # m, wider clusters are not cones
+    cone_max_points: 80   # more returns than this is a wall or a car (a cone at 1 m is ~30)
+    match_px_frac: 0.04   # a lidar cone takes a blob's colour only within this fraction of the image width
+    min_blob_px: 3        # smallest camera blob taken as a cone
+    camera_hfov_deg: 57.1 # measured against ground truth, with the camera pose below
+    camera_ahead: -0.66   # m; effective camera position along the car relative to the lidar (fitted)
+    camera_lateral: -0.033
+    camera_col_bias: -1.0 # px
+    camera_lag_s: 0.073   # s; the image is this much older than the scan it is matched with
+    hsv_blue: [105, 220, 8, 135, 255, 255]     # h_lo, s_lo, v_lo, h_hi, s_hi, v_hi; calibrated on this camera
+    hsv_yellow: [18, 150, 8, 40, 255, 255]
+    hsv_orange: [0, 150, 15, 15, 255, 255]
+    band_top: 0.20        # fraction of image height; rows above are sky
+    band_bottom: 0.36     # rows below are the car's own body
+    band_floor: 0.21      # a blob that ends above this is sky
+    orange_min_px: 35     # smaller orange-hued blobs are shaded yellow cones
+    track_gate: 0.4       # m, a cone this close to one from the previous scan inherits its colour
+    track_memory: 40      # scans a colour is carried without the camera confirming it
+    side_guess_range: 2.5 # m; an uncoloured cone this close ahead is guessed blue if left, yellow if right
+    side_override_x: 1.5  # m; a cone closer than this and more than side_override_y to one side takes that side's colour
+    side_override_y: 0.6
+    avoid_range: 0.9      # m; any cone closer than this ahead pushes the steering away from it
+    stall_time: 2.0       # s of the lidar scene not changing while driving before we assume we are stuck
+    reverse_time: 1.2     # s to back away with the wheel turned the other way
+    reverse_speed: 0.5    # m/s backwards while unsticking
+    chain_step: 1.8       # m, the smallest allowed gap between consecutive cones of one colour when ordering them (grows to twice the spacing in view)
+    steer_tau: 0.15
