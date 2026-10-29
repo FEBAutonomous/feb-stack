@@ -1,0 +1,7 @@
+# Loaded on top of driver.yaml on the car only. First drives: slow, generous margins.
+reactive_driver:
+  ros__parameters:
+    max_speed: 2.0        # the supervisor's cap still applies on top
+    margin: 0.25          # the S2 sits higher and the corridor has nooks
+    steer_delay: 0.15     # the real servo chain, measured 0.12 s throttle, steering similar
+    brake_margin: 0.55

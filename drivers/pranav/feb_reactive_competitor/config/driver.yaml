@@ -1,0 +1,33 @@
+# feb_reactive_competitor: every number has a comment in reactive_driver.py.
+reactive_driver:
+  ros__parameters:
+    range_cap: 8.0        # m, ranges are clipped here
+    smooth: 3             # beams, moving average on the scan
+    fov: 1.40             # rad, half field of view for the target
+    disparity: 0.30       # m, a jump between neighbouring beams this big is an edge to extend
+    margin: 0.30          # m, extended past half the car's width
+    tie: 0.92             # beams within this fraction of the farthest count as ties (continuity)
+    opening: 0.6          # the opening around the far beam: beams reaching this fraction of its distance
+    center_weight: 0.5    # aim = (1-w) * far beam + w * middle of the opening
+    lookahead_min: 0.8    # m, pure-pursuit lookahead at rest
+    lookahead_gain: 0.30  # s, lookahead grows by this per m/s
+    lookahead_max: 1.8    # m
+    steer_delay: 0.25     # s, command-to-wheel lag predicted away
+    side_min: 0.30        # m, a flank closer than this pushes the steering away
+    side_gain: 0.8        # rad per m of intrusion
+    steer_tau: 0.12       # s, steering low-pass on top of the actuator rate limit
+    max_speed: 3.0        # m/s on an open straight
+    min_speed: 0.8        # m/s floor in tight corners
+    accel_limit: 3.5      # m/s^2
+    decel_limit: 5.5      # m/s^2, how fast the speed target may fall
+    brake_decel: 3.0      # m/s^2, the braking the car is trusted to deliver (used for the clearance)
+    lat_accel: 3.5        # m/s^2 cornering limit for the speed target
+    brake_margin: 0.45    # m kept before the clearance ahead
+    clear_pct: 3.0        # percentile of the corridor ranges taken as the clearance
+    corridor_extra: 0.10  # m added to half the width for the clearance corridor
+    curv_tau: 0.25        # s, steering low-pass for the cornering speed
+    goal_tau: 0.15        # s, speed goal low-pass
+    stuck_after: 1.0      # s stopped against something before backing out
+    reverse_speed: 0.6    # m/s backing out
+    reverse_for: 1.2      # s
+    creep_speed: 0.5      # m/s when the nose is on something but the wheels point at open room
