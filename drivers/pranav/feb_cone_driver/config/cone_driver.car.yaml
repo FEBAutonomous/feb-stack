@@ -1,21 +1,21 @@
 # Loaded on top of cone_driver.yaml only on the car (FEB_CAR=1): the numbers that differ on the real
 # car. Every camera number in cone_driver.yaml was fitted to the simulator's camera; these are the
 # RealSense D435if on the front bumper (2026-11-03 mount: 4 cm off the ground, a few degrees up,
-# centred, 15 cm ahead of the lidar). Starting values from the mount and the camera's spec sheet;
-# fit them from a bag of /scan + /camera/color/image_raw driven past real cones, then correct here.
+# centred), fitted 2026-11-04 from a bag of the corridor cone lane (bags/calbag_car on the PC):
+# lidar cone clusters projected into the image against colour blobs, 10.6k matches, 7 px median error.
 cone_driver:
   ros__parameters:
     max_speed: 1.0        # the real car's first laps; the supervisor's cap still applies on top
-    camera_hfov_deg: 55.0 # D435 colour at 640x480 (fx ~615 px); check against /camera/color/camera_info
-    camera_ahead: 0.15    # m, the camera is ahead of the lidar (the simulator's was behind)
-    camera_lateral: 0.0
+    camera_hfov_deg: 55.6 # from /camera/color/camera_info: fx 607.4 px at 640 wide
+    camera_ahead: 0.20    # m, the camera is ahead of the lidar (fitted; the mount says about the same)
+    camera_lateral: 0.02  # m, fitted
     camera_col_bias: 0.0
-    camera_lag_s: 0.03    # s, a 30 Hz USB camera; fit it
-    band_top: 0.25        # the camera points slightly up: rows above this are sky and walls
-    band_bottom: 0.98     # no car body in this image
-    band_floor: 0.26
-    hsv_blue: [95, 90, 40, 130, 255, 255]      # daylight, loose; tighten from the bag
-    hsv_yellow: [18, 90, 60, 38, 255, 255]
-    hsv_orange: [3, 120, 60, 17, 255, 255]
-    min_blob_px: 6        # 640x480 instead of 192x108: blobs are bigger
-    orange_min_px: 60
+    camera_lag_s: 0.10    # s, fitted: the image is this much older than the scan it is matched with
+    band_top: 0.45        # rows above are walls and ceiling (blobs sat in 0.55 to 0.79 of the height)
+    band_bottom: 0.92
+    band_floor: 0.50      # a blob that ends above this is not on the floor
+    hsv_blue: [92, 110, 40, 115, 255, 255]     # measured H 97-106, S 113-255, V 46-186 (5-95%)
+    hsv_yellow: [18, 90, 60, 38, 255, 255]     # measured H 25-32, S 96-206, V 81-192
+    hsv_orange: [0, 100, 60, 15, 255, 255]     # measured H 1-13, S 105-244, V 64-166
+    min_blob_px: 40       # 640x480: a cone at 5 m is still ~60 px
+    orange_min_px: 120
