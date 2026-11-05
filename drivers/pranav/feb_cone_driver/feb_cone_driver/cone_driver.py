@@ -30,6 +30,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSDurabilityPolicy, QoSHistoryPolicy, QoSProfile, QoSReliabilityPolicy
 from ackermann_msgs.msg import AckermannDriveStamped
 from nav_msgs.msg import Odometry
+from std_msgs.msg import String
 from sensor_msgs.msg import Image, Imu, LaserScan
 QOS = QoSProfile(reliability=QoSReliabilityPolicy.RELIABLE, durability=QoSDurabilityPolicy.VOLATILE,
                  history=QoSHistoryPolicy.KEEP_LAST, depth=10)
@@ -68,6 +69,8 @@ class ConeDriver(Node):
         self.last_t = None
         self.prev_clusters = None    # last scan's cone clusters, to tell whether the world moves past us
         self.stalled_since = None    # sim time the lidar scene stopped changing although we were driving
+        self.live = False            # the supervisor is passing our commands through (AUTONOMOUS); the stall
+                                     # timer only runs then, or a car parked in IDLE would plan a reverse
         self.reverse_until = None    # sim time until which we back away from whatever we are stuck on
         self.target_t = -1e9         # sim time of the last scan that gave a target
 
@@ -79,6 +82,7 @@ class ConeDriver(Node):
         self.create_subscription(Image, "/camera/color/image_raw", self.on_image, QOS)
         self.create_subscription(Imu, "/imu", self.on_imu, QOS)
         self.create_subscription(Odometry, "/odom", self.on_odom, QOS)
+        self.create_subscription(String, "/feb/state", self.on_state, 10)
         self.get_logger().info("cone driver: lidar + camera fusion, pure pursuit at %.1f m/s" % self.p["max_speed"])
 
     # ------------------------------------------------------------------ camera: colour blobs
@@ -376,7 +380,7 @@ class ConeDriver(Node):
             self.v_cmd = 0.0
         if moving and target is not None:
             self.stalled_since = None
-        elif self.v_cmd > 0.05 or target is None:
+        elif self.live and (self.v_cmd > 0.05 or target is None):
             # stuck on a cone, or stopped with nothing to follow (nosed out of the corridor at a
             # hairpin): both end the same way, back up and look again
             self.stalled_since = self.stalled_since or t      # sticky: a throttle dip does not reset it
@@ -408,6 +412,11 @@ class ConeDriver(Node):
         forward = np.median(np.abs(cur[near, 0] - prev[j[near], 0]))
         expected = max(self.speed * dt, 0.03 if self.v_cmd > 0.1 else 0.0)
         return bool(expected <= 0.0 or forward > 0.4 * expected)
+
+    def on_state(self, msg):
+        self.live = msg.data.startswith("AUTONOMOUS")
+        if not self.live:
+            self.stalled_since, self.reverse_until = None, None
 
     def on_odom(self, msg):
         """Speed as the car reports it (wheel odometry on the car, the same dead-reckoned in the sim)."""

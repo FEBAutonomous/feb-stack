@@ -1,7 +1,21 @@
-# Loaded on top of cone_driver.yaml only on the car (FEB_CAR=1). Put here the numbers that differ on
-# the real car and nothing else, so the simulator run and the car run share every other value.
-# Same shape as cone_driver.yaml. Empty until the first drive tells you what to change; the usual
-# suspects are below, commented out with the simulator values.
+# Loaded on top of cone_driver.yaml only on the car (FEB_CAR=1): the numbers that differ on the real
+# car. Every camera number in cone_driver.yaml was fitted to the simulator's camera; these are the
+# RealSense D435if on the front bumper (2026-11-03 mount: 4 cm off the ground, a few degrees up,
+# centred), fitted 2026-11-04 from a bag of the corridor cone lane (bags/calbag_car on the PC):
+# lidar cone clusters projected into the image against colour blobs, 10.6k matches, 7 px median error.
 cone_driver:
   ros__parameters:
     max_speed: 1.0        # the real car's first laps; the supervisor's cap still applies on top
+    camera_hfov_deg: 55.6 # from /camera/color/camera_info: fx 607.4 px at 640 wide
+    camera_ahead: 0.20    # m, the camera is ahead of the lidar (fitted; the mount says about the same)
+    camera_lateral: 0.02  # m, fitted
+    camera_col_bias: 0.0
+    camera_lag_s: 0.10    # s, fitted: the image is this much older than the scan it is matched with
+    band_top: 0.45        # rows above are walls and ceiling (blobs sat in 0.55 to 0.79 of the height)
+    band_bottom: 0.92
+    band_floor: 0.50      # a blob that ends above this is not on the floor
+    hsv_blue: [92, 110, 40, 115, 255, 255]     # measured H 97-106, S 113-255, V 46-186 (5-95%)
+    hsv_yellow: [18, 90, 60, 38, 255, 255]     # measured H 25-32, S 96-206, V 81-192
+    hsv_orange: [0, 100, 60, 15, 255, 255]     # measured H 1-13, S 105-244, V 64-166
+    min_blob_px: 40       # 640x480: a cone at 5 m is still ~60 px
+    orange_min_px: 120
