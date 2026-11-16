@@ -1,0 +1,16 @@
+PipelineHeader meta
+float64[] points
+float64[] left
+float64[] right
+float64[] centre
+float64 width
+float64 confidence
+uint32 segments
+float64 residual
+float64 front_clearance
+string diagnostics
+float64 heading
+float64 map_vote_score
+uint32 map_vote_matches
+bool valid
+string reason

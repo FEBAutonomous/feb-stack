@@ -1,0 +1,15 @@
+PipelineHeader meta
+string mode
+float64[] path
+float64 steering
+float64 curvature
+float64[2] target
+float64 target_speed
+float64 collision_distance
+uint64 guidance_cycle
+builtin_interfaces/Time guidance_stamp
+float64 guidance_age
+bool emergency
+bool degraded
+bool valid
+string reason

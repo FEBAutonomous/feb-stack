@@ -1,0 +1,16 @@
+PipelineHeader meta
+builtin_interfaces/Time odom_stamp
+builtin_interfaces/Time imu_stamp
+float64[2] odom_position
+float64 odom_yaw
+float64 yaw
+float64 heading_correction
+float64 body_speed
+float64 wheel_speed
+float64 yaw_rate
+float64 steering
+float64 dt
+float64 travelled
+bool heading_active
+bool valid
+string reason

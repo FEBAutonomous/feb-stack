@@ -1,0 +1,9 @@
+PipelineHeader meta
+float64[] left
+float64[] right
+float64[] left_votes
+float64[] right_votes
+float64[2] pose
+float64 yaw
+float64[2] odom_position
+float64 heading_correction

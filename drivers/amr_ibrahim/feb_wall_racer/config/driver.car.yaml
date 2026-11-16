@@ -1,0 +1,6 @@
+# Member guide contract: this file is loaded after driver.yaml only with FEB_CAR=1.
+# No real-car measurements were supplied. Inherit the existing working values;
+# add only measured differences here, using the same names and units as driver.yaml.
+# Hardware VESC/servo conversion remains in the stock car bringup, not this file.
+wall_racer:
+  ros__parameters: {}

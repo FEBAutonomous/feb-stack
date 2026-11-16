@@ -1,0 +1,10 @@
+name: feb_wall_racer
+kind: walls
+maintainer: Amr Ibrahim
+packages: [feb_wall_racer, feb_wall_racer_msgs]
+modes:
+  trackdrive: {launch: drive.launch.py, max_speed: 5.0}
+  inspection: {launch: drive.launch.py, max_speed: 0.8}
+default_mode: trackdrive
+# The racer already computes tyre slip and wheel demand; preserve it at the adapter.
+adapter: {speed_per_throttle: 25.11, throttle_kp: 0.0, throttle_ki: 0.0, throttle_slew: 100.0, speed_window: 0.05}
