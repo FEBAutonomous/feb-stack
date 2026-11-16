@@ -1,0 +1,13 @@
+PipelineHeader meta
+MotionEstimate motion
+float64[2] pose
+float64 yaw
+float64 lidar_heading_offset
+float64 travelled
+float64 last_localization_stamp
+uint32 matches
+float64 residual
+bool valid
+bool localized
+bool finalized
+string reason

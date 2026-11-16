@@ -1,0 +1,11 @@
+PipelineHeader meta
+float64[] line
+float64[] speeds
+float64[] left
+float64[] right
+float64[] centre
+float64[] half_width
+float64 length
+float64[] arc_length
+bool valid
+string reason

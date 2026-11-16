@@ -1,0 +1,114 @@
+wall_racer:
+  ros__parameters:
+    scan_topic: "/scan" # standard lidar topic in the FEB driver contract
+    odom_topic: "/odom" # dead-reckoned pose and forward speed
+    imu_topic: "/imu" # yaw-rate input to the vehicle speed estimate
+    drive_topic: "/drive" # AckermannDriveStamped output in m/s and radians
+    state_topic: "/feb/state" # drive only while the supervisor reports AUTONOMOUS
+    sensor_timeout: 0.5 # seconds without fresh odometry or IMU before stopping
+    # Scan segmentation and line fitting (metres).
+    min_range: 0.30 # reject chassis returns and very near noise
+    max_range: 12.0 # ignore wall returns beyond the useful perception horizon
+    min_segment_points: 4 # minimum scan-contiguous points for a line segment
+    min_segment_length: 0.20 # minimum fitted segment length, metres
+    adjacent_gap: 0.10 # maximum neighbouring-beam gap within one segment
+    split_tolerance: 0.045 # maximum point-to-line residual before splitting a segment
+    max_line_segments: 160 # bound fitting and corridor-search work per scan
+    # Local corridor extraction.
+    track_width: 2.2 # nominal width; caps wall-map association distance to one quarter of this
+    track_width_min: 1.0 # reject implausibly narrow measured corridors
+    track_width_max: 6.0 # reject implausibly wide measured corridors
+    corridor_x_min: 0.5 # first forward-distance station used for corridor pairing
+    corridor_x_max: 5.0 # farthest forward-distance station used for corridor pairing
+    corridor_step: 0.35 # distance between candidate centerline stations
+    corridor_heading_max: 75.0 # maximum local travel-axis search angle in degrees
+    corridor_heading_step: 5.0 # angular resolution of the local travel-axis search
+    corridor_heading_window: 30.0 # local heading search window after an axis is established
+    corridor_map_min_votes: 8 # repeated map votes required before using wall-side priors
+    corridor_map_candidate_count: 3 # top candidate axes considered against the mapped prior
+    corridor_map_seed_samples: 3 # paired samples required before adding side labels to the map
+    corridor_map_seed_confidence: 0.25 # minimum corridor confidence for map side labels
+    min_corridor_confidence: 0.12 # minimum confidence for the mapping follower
+    lookahead: 1.4 # pure-pursuit target distance in metres
+    map_a_lat: 2.0 # lateral acceleration limit during the cautious mapping lap, m/s^2
+    map_a_brake: 4.6 # assumed braking acceleration for mapping path safety, m/s^2
+    map_path_horizon: 2.5 # distance ahead checked for wall clearance, metres
+    map_path_step: 0.15 # spacing between predicted path-clearance samples, metres
+    map_path_reaction_distance: 0.35 # distance reserved for reaction and actuation delay
+    mapping_fallback_duration: 0.5 # maximum seconds to reuse recent valid mapping steering
+    mapping_fallback_speed: 0.6 # speed cap while briefly reusing mapping steering, m/s
+    # Conservative mapping lap and track validation.
+    map_speed: 1.8 # nominal mapping-lap speed cap, m/s
+    blind_speed: 0.8 # reduced speed cap when racing localization is degraded, m/s
+    # Racing plan uses the cone racer's validated speed and vehicle-control limits.
+    v_max: 5.0 # raceline speed-plan limit, m/s; FEB supervisor mode applies a separate cap
+    race_speed_scale: 1.0 # speed-plan multiplier in (0, 1]; lower speeds without raising physical limits
+    a_lat: 5.0 # planned lateral acceleration limit, m/s^2
+    a_acc: 4.6 # planned longitudinal acceleration limit, m/s^2
+    a_brake: 4.6 # planned longitudinal braking limit, m/s^2
+    v_cap: 12.0 # MPC speed ceiling, lowered at startup to the configured race speed
+    mpc_a_lat: 5.8 # MPC lateral acceleration limit, m/s^2
+    mpc_a_acc: 5.4 # MPC longitudinal acceleration limit, m/s^2
+    mpc_a_brake: 5.4 # MPC longitudinal braking limit, m/s^2
+    throttle_max: 0.45 # maximum internal throttle request before conversion to /drive speed
+    min_loop_distance: 20.0 # minimum driven distance before loop closure can be considered
+    loop_radius: 2.5 # maximum start-pose distance for loop-closure candidates, metres
+    max_loop_correction: 3.0 # reject loop closure corrections larger than this, metres
+    keyframe_distance: 0.4 # minimum travelled distance between wall-map keyframes, metres
+    path_sample_distance: 0.15 # minimum travelled distance between mapping path samples, metres
+    map_voxel: 0.20 # wall-map voxel size, metres
+    max_map_points: 8000 # bound retained wall-map points
+    min_track_length: 15.0 # reject shorter closed-track builds, metres
+    max_track_length: 1000.0 # reject longer closed-track builds, metres
+    min_width_coverage: 0.30 # minimum fraction of path samples with valid width evidence
+    sample_step: 0.25 # raceline sample spacing, metres
+    car_half_width: 0.135 # half-width used for wall-clearance planning, metres
+    wall_clearance: 0.18 # additional clearance from the car body to each wall, metres
+    # State estimation and safety.
+    lidar_forward: 0.2733 # prior-sim laser-to-rear-axle offset in metres; verify against this sim
+    wheelbase: 0.339 # measured wheelbase used by steering and vehicle models, metres
+    max_steer: 0.5236 # steering angle limit at the wheels, radians
+    lost_after: 1.5 # seconds without a valid race localization before reducing speed
+    stop_after: 8.0 # seconds without a valid race localization before stopping
+    obstacle_stop_range: 0.38 # stop when a forward return is closer than this, metres
+    status_period: 0.5 # minimum interval between status messages, seconds
+    debug: false # enable detailed mapping corridor, clearance, and steering diagnostics
+    # Existing simulator calibration, now shared by every runtime model consumer.
+    axle_to_centre: 0.155 # metres from rear axle to the point tracked by MPC
+    steer_rate: 3.2 # physical steering slew rate, rad/s
+    act_delay: 0.12 # command-to-actuation delay, seconds
+    speed_per_throttle: 25.11 # model wheel m/s per normalized command; /drive remains m/s
+    drag: 0.273 # longitudinal linear drag coefficient, 1/s
+    corner_drag: 1.0 # cornering-loss coefficient in observer, prediction and MPC
+    slip_peak: 0.145 # slip ratio at peak longitudinal force
+    mu_peak: 7.2 # peak longitudinal acceleration, m/s^2
+    slip_slide: 0.30 # slip ratio at the sliding-force plateau
+    mu_slide: 5.38 # sliding longitudinal acceleration, m/s^2
+    lat_peak: 6.3 # lateral acceleration before the model slides, m/s^2
+    lat_slide: 5.0 # modeled lateral acceleration while sliding, m/s^2
+    v_slip_min: 0.4 # speed denominator floor for slip ratio, m/s
+    # Existing controller defaults made explicit; no real-car values are inferred.
+    curv_window: 0.8 # metres covered by the speed profile's curvature-peak envelope
+    map_match_gate: 0.55 # maximum scan-to-map association distance, also bounded by track_width/4
+    # Mapping registration: observability ratio, metres, radians, metres.
+    scan_match_min_eigen_ratio: 0.03
+    scan_match_max_translation: 0.15
+    scan_match_max_yaw: 0.06
+    scan_match_max_residual: 0.08
+    mpc_horizon: 20 # number of prediction stages
+    mpc_dt: 0.1 # seconds per prediction stage
+    mpc_substeps: 2 # RK4 integration substeps per stage
+    mpc_max_iter: 100 # maximum optimizer iterations per solve
+    mpc_steer_rate: 2.9 # planned steering slew, rad/s; bounded by physical steer_rate
+    throttle_min: 0.02 # minimum normalized wheel-demand model request during normal driving
+    pursuit_lookahead: 0.9 # fallback pursuit base lookahead, metres
+    w_lat: 12.0 # MPC lateral position error weight
+    w_lon: 1.0 # MPC longitudinal position error weight
+    w_head: 4.0 # MPC heading error weight
+    w_speed: 5.0 # MPC speed error weight
+    w_terminal: 3.0 # terminal-stage error multiplier
+    w_force: 0.05 # MPC force-reference error weight
+    w_omega: 0.3 # MPC steering-rate weight
+    w_dforce: 0.001 # MPC force-change weight
+    w_domega: 0.004 # MPC steering-rate-change weight
+    w_slack: 50.0 # MPC soft lateral-limit penalty

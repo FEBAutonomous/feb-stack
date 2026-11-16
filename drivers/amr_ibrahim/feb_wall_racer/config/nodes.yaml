@@ -1,0 +1,14 @@
+# Process coordination deadlines (seconds), separate from physical car tuning.
+# Omitted settings use the same validated startup defaults.
+perception: {}
+motion_estimator: {}
+slam: {}
+global_planner:
+  planning_timeout: 2.0
+local_planner: {}
+mpc_controller:
+  worker_timeout: 0.5
+run_manager:
+  reset_timeout: 5.0
+  planning_timeout: 2.0
+visualization: {}
